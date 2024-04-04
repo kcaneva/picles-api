@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ShelterController } from './shelter.controller';
-import ShelterTokens from './shelters.tokens';
+import ShelterTokens from './shelter.tokens';
 import GetShelderDetailsUseCase from './usecases/get.shelter.details.usecase';
 
 @Module({
