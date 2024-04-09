@@ -14,7 +14,17 @@ export default class UpdateShelterDetailsUseCase implements IUseCase<UpdateShelt
       ){}
       
     async run(input: UpdateShelterControllerInput): Promise<UpdateShelterDetailsUseCaseOutput> {
-        throw new Error("Method no implement");
+        await this.shelterRepository.update(input)
 
+        const shelter = await this.shelterRepository.get()
+
+        return new UpdateShelterDetailsUseCaseOutput({
+            name: shelter.name,
+            phone: shelter.phone,
+            whatsApp: shelter.whatsApp,
+            email: shelter.email,
+            createdAt: shelter.createdAt,
+            updatedAt: shelter.updatedAt
+        })
     }
 }
