@@ -14,16 +14,17 @@ export default class CreatePetsUseCase implements IUseCase<CreatePetControllerIn
       ){}
 
     async run(input: CreatePetControllerInput): Promise<CreatePetUseCaseOutput> {
-         return await this.petRepository.create(input)
-
-    //      const shelter = await this.petRepository.get()
-
-    //     return new CreatePetUseCaseOutput({
-    //         name: pet.name,
-
-
-    //         createdAt: pet.createdAt,
-    //         updatedAt: pet.updatedAt
-    //     })
+         const newPet = await this.petRepository.create(input)
+         return new CreatePetUseCaseOutput({
+          id: newPet._id,
+          name: newPet.name,
+          type: newPet.type,
+          size: newPet.size,
+          gender: newPet.gender,
+          bio: newPet.bio,
+          photo: newPet.photo,
+          createdAt: newPet.createdAt,
+          updatedAt: newPet.updatedAt,    
+         })
     }
 }

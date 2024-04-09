@@ -4,7 +4,7 @@ import PetTokens from './pet.tokens';
 import CreatePetsUseCase from './usecases/create.pet.usecase';
 import { Pet, PetSchema } from './schemas/pet.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PetRepository } from './pet.repository';
+import PetRepository from './pet.repository';
 
 @Module({
   controllers: [PetController],

@@ -5,7 +5,7 @@ import IShelterRepository from "./interfaces/shelter.repository.interface";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class ShelterRepository implements IShelterRepository {
+export default class ShelterRepository implements IShelterRepository {
     constructor(
         @InjectModel(Shelter.name)
         private readonly shelterModel: Model<Shelter>

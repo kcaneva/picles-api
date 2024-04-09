@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument } from "mongoose"
 
-export type PEtDocument = HydratedDocument<Pet>
+export type PetDocument = HydratedDocument<Pet>
 
 @Schema({ versionKey: false })
 export class Pet {

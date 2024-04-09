@@ -1,5 +1,5 @@
 export default class CreatePetUseCaseOutput {
-    _id: string;
+    id: string;
     name: string;
     type: string;
     size: string;
