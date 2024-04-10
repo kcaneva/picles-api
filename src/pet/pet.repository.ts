@@ -20,5 +20,8 @@ export default class PetRepository implements IPetRepository {
         })    
     }
 
+    async getById(id: string): Promise<Pet> {
+        return await this.petModel.findById(id)
+    }   
 
 }

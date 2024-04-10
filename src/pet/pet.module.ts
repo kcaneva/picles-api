@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PetController } from './pet.controller';
 import PetTokens from './pet.tokens';
-import CreatePetsUseCase from './usecases/create.pet.usecase';
+import CreatePetUseCase from './usecases/create.pet.usecase';
 import { Pet, PetSchema } from './schemas/pet.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import PetRepository from './pet.repository';
+import GetPetByIdUseCase from './usecases/get.pet.by.id.usecase';
 
 @Module({
   controllers: [PetController],
@@ -18,8 +19,12 @@ import PetRepository from './pet.repository';
     },
     {
       provide: PetTokens.createPetUseCase,
-      useClass: CreatePetsUseCase, 
+      useClass: CreatePetUseCase, 
     },
+    {
+      provide: PetTokens.getPetByIdUseCase,
+      useClass: GetPetByIdUseCase, 
+    },  
   ]
 })
 export class PetModule {}

@@ -6,7 +6,7 @@ import PetTokens from "../pet.tokens"
 import IPetRepository from "../interfaces/pet.repository.interface"
 
 @Injectable()
-export default class CreatePetsUseCase implements IUseCase<CreatePetControllerInput, CreatePetUseCaseOutput> {
+export default class CreatePetUseCase implements IUseCase<CreatePetControllerInput, CreatePetUseCaseOutput> {
 
      constructor(
         @Inject(PetTokens.petRepository)
