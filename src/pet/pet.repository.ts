@@ -35,6 +35,16 @@ export default class PetRepository implements IPetRepository {
         )
     }
 
+    async updatePetPhotoById(data: Partial<Pet>): Promise<void>
+    {
+        await this.petModel.updateOne( 
+            {"_id": data._id }, 
+            {
+            ...data,
+            updatedAt: new Date()
+            }
+        )
+    }
     async deletePetById(id: string): Promise<void>
     {
         return await this.petModel.findByIdAndDelete(id)

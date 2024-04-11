@@ -4,5 +4,6 @@ export default interface IPetRepository {
     create(data: Partial<Pet>): Promise<Pet>; 
     getById(id: string): Promise<Pet>;
     updatePetById(data: Partial<Pet>): Promise<void>;
+    updatePetPhotoById(data: Partial<Pet>): Promise<void>;
     deletePetById(id: string): Promise<void>
 }

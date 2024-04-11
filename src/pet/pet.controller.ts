@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Get, Put, Param, BadRequestException, Delete } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Get, Put, Patch, Param, BadRequestException, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import CreatePetControllerInput from './dtos/create.pet.controller.input';
 import CreatePetUseCaseOutput from './usecases/dtos/create.pet.usecase.output';
 import CreatePetUseCaseInput from './usecases/dtos/create.pet.usecase.input';
@@ -11,6 +11,10 @@ import UpdatePetByIdUseCaseOutput from './usecases/dtos/update.pet.by.Id.usecase
 import UpdatePetByIdUseCaseInput from './usecases/dtos/update.pet.by.Id.usecase.input';
 import DeletePetByIdUseCaseOutput from './usecases/dtos/delete.pet.by.id.usecase.output';
 import DeletePetByIdUseCaseInput from './usecases/dtos/delete.pet.by.id.usecase.input';
+import multerConfig from 'src/config/multer.config';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdatePetPhotoByIdUseCaseInput } from './usecases/dtos/update.pet.photo.by,is.usecase.input';
+import { UpdatePetPhotoByIdUseCaseOutput } from './usecases/dtos/update.pet.photo.by,is.usecase.output';
 
 
 @Controller('pet')
@@ -24,6 +28,9 @@ export class PetController{
 
     @Inject(PetTokens.updatePetByIdUseCase)
     private readonly updatePetByIdUseCase: IUseCase<UpdatePetByIdUseCaseInput, UpdatePetByIdUseCaseOutput> 
+    
+    @Inject(PetTokens.updatePetPhotoByIdUseCase)
+    private readonly updatePetPhotoByIdUseCase: IUseCase<UpdatePetPhotoByIdUseCaseInput, UpdatePetPhotoByIdUseCaseOutput> 
 
     @Inject(PetTokens.deletePetByIdUseCase)
     private readonly deletePetByIdUseCase: IUseCase<DeletePetByIdUseCaseInput, DeletePetByIdUseCaseOutput> 
@@ -62,4 +69,17 @@ export class PetController{
         return await this.deletePetByIdUseCase.run(useCaseInput)
     }
     
+    @Patch(':id/photo')
+    @UseInterceptors(FileInterceptor('photo', multerConfig))
+    async updatePhoto(
+        @UploadedFile() photo: Express.Multer.File,
+        @Param('id') id: string,
+    ): Promise<UpdatePetByIdUseCaseOutput>
+   {
+        const useCaseInput = new UpdatePetPhotoByIdUseCaseInput({
+            id,
+            photoPath: photo.path,
+        })
+        return await this.updatePetPhotoByIdUseCase.run(useCaseInput)
+    }
 }
