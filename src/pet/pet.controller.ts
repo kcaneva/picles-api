@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Get, Put, Param, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Get, Put, Param, BadRequestException, Delete } from '@nestjs/common';
 import CreatePetControllerInput from './dtos/create.pet.controller.input';
 import CreatePetUseCaseOutput from './usecases/dtos/create.pet.usecase.output';
 import CreatePetUseCaseInput from './usecases/dtos/create.pet.usecase.input';
@@ -8,8 +8,9 @@ import PetTokens from './pet.tokens';
 import { IUseCase } from 'src/domain/iusercase.interface';
 import UpdatePetByIdControllerInput from './dtos/update.pet.by.id.controller.input';
 import UpdatePetByIdUseCaseOutput from './usecases/dtos/update.pet.by.Id.usecase.output';
-import { Pet } from './schemas/pet.schema';
 import UpdatePetByIdUseCaseInput from './usecases/dtos/update.pet.by.Id.usecase.input';
+import DeletePetByIdUseCaseOutput from './usecases/dtos/delete.pet.by.id.usecase.output';
+import DeletePetByIdUseCaseInput from './usecases/dtos/delete.pet.by.id.usecase.input';
 
 
 @Controller('pet')
@@ -23,6 +24,9 @@ export class PetController{
 
     @Inject(PetTokens.updatePetByIdUseCase)
     private readonly updatePetByIdUseCase: IUseCase<UpdatePetByIdUseCaseInput, UpdatePetByIdUseCaseOutput> 
+
+    @Inject(PetTokens.deletePetByIdUseCase)
+    private readonly deletePetByIdUseCase: IUseCase<DeletePetByIdUseCaseInput, DeletePetByIdUseCaseOutput> 
 
     @Post()
     async createPet(@Body() input: CreatePetControllerInput): Promise<CreatePetUseCaseOutput>
@@ -47,6 +51,15 @@ export class PetController{
     {
        const useCaseInput = new UpdatePetByIdUseCaseInput({ id, ...input });
        return await this.updatePetByIdUseCase.run(useCaseInput)
+    }
+    
+    @Delete(':id')
+    async deletePetById(@Param('id') id: string): Promise<DeletePetByIdUseCaseOutput>
+    {
+        console.log( 'controler 1: ' + id)
+        const useCaseInput = new DeletePetByIdUseCaseInput({ id });
+        console.log(useCaseInput)
+        return await this.deletePetByIdUseCase.run(useCaseInput)
     }
     
 }
