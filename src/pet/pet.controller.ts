@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Get, Param, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Get, Put, Param, BadRequestException } from '@nestjs/common';
 import CreatePetControllerInput from './dtos/create.pet.controller.input';
 import CreatePetUseCaseOutput from './usecases/dtos/create.pet.usecase.output';
 import CreatePetUseCaseInput from './usecases/dtos/create.pet.usecase.input';
@@ -6,6 +6,10 @@ import GetPetByIdUseCaseOutput from './usecases/dtos/get.pet.by.id.usecase.outpu
 import GetPetByIdUseCaseInput from './usecases/dtos/get.pet.by.id.usecase.input';
 import PetTokens from './pet.tokens';
 import { IUseCase } from 'src/domain/iusercase.interface';
+import UpdatePetByIdControllerInput from './dtos/update.pet.by.id.controller.input';
+import UpdatePetByIdUseCaseOutput from './usecases/dtos/update.pet.by.Id.usecase.output';
+import { Pet } from './schemas/pet.schema';
+import UpdatePetByIdUseCaseInput from './usecases/dtos/update.pet.by.Id.usecase.input';
 
 
 @Controller('pet')
@@ -16,6 +20,9 @@ export class PetController{
     
     @Inject(PetTokens.getPetByIdUseCase)
     private readonly getPetByIdUseCase: IUseCase<GetPetByIdUseCaseInput, GetPetByIdUseCaseOutput> 
+
+    @Inject(PetTokens.updatePetByIdUseCase)
+    private readonly updatePetByIdUseCase: IUseCase<UpdatePetByIdUseCaseInput, UpdatePetByIdUseCaseOutput> 
 
     @Post()
     async createPet(@Body() input: CreatePetControllerInput): Promise<CreatePetUseCaseOutput>
@@ -33,7 +40,13 @@ export class PetController{
         } catch (error) {
             throw new BadRequestException(JSON.parse(error.message))         
         }
+    }
 
+    @Put(':id')
+    async updatePetById(@Param('id') id: string, @Body() input: UpdatePetByIdControllerInput): Promise<UpdatePetByIdUseCaseOutput>
+    {
+       const useCaseInput = new UpdatePetByIdUseCaseInput({ id, ...input });
+       return await this.updatePetByIdUseCase.run(useCaseInput)
     }
     
 }
