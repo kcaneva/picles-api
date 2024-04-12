@@ -6,13 +6,18 @@ import GetPetByIdUseCaseOutput from "./dtos/get.pet.by.id.usecase.output"
 import GetPetByIdUseCaseInput from "./dtos/get.pet.by.id.usecase.input"
 import { Pet } from "../schemas/pet.schema"
 import PetNotFoundError from "src/domain/errors/pet.not.found.error"
+import AppTokens from "src/app.tokens"
+import IFileService from "src/interfaces/file.services.interface"
 
 @Injectable()
 export default class GetPetByIdUseCase implements IUseCase<GetPetByIdUseCaseInput, GetPetByIdUseCaseOutput> {
 
      constructor(
         @Inject(PetTokens.petRepository)
-        private readonly petRepository: IPetRepository
+        private readonly petRepository: IPetRepository,
+        
+        @Inject(AppTokens.fileService)
+        private readonly fileService: IFileService
       ){}
 
     async run(input: GetPetByIdUseCaseInput): Promise<GetPetByIdUseCaseOutput> {
@@ -22,14 +27,16 @@ export default class GetPetByIdUseCase implements IUseCase<GetPetByIdUseCaseInpu
             new PetNotFoundError();
         }      
          
-         return new GetPetByIdUseCaseOutput({
+        const petPhoto = !!pet.photo ? (await this.fileService.readFile(pet.photo)).toString('base64') : null;
+
+        return new GetPetByIdUseCaseOutput({
           id: pet._id,
           name: pet.name,
           type: pet.type,
           size: pet.size,
           gender: pet.gender,
           bio: pet.bio,
-          photo: pet.photo,
+          photo: petPhoto,
           createdAt: pet.createdAt,
           updatedAt: pet.updatedAt,    
          })

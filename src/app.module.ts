@@ -10,10 +10,6 @@ import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
             ConfigModule.forRoot(),
-            // ServeStaticModule.forRoot({
-            //     rootPath: join( __dirname, '..', '../public'),
-            //     serveRoot: '/public',
-            // }),
             MulterModule,
             MongooseModule.forRootAsync({
               imports: [ConfigModule],
