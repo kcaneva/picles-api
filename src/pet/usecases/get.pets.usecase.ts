@@ -6,6 +6,7 @@ import AppTokens from "src/app.tokens"
 import IFileService from "src/interfaces/file.services.interface"
 import GetPetsUseCaseInput from "./dtos/get.pets.usecase.input"
 import GetPetsUseCaseOutput from "./dtos/get.pets.usecase.output"
+import { PetResponse } from "../dtos/pet.response"
 
 @Injectable()
 export default class GetPetsUseCase implements IUseCase<GetPetsUseCaseInput, GetPetsUseCaseOutput> {
@@ -20,21 +21,26 @@ export default class GetPetsUseCase implements IUseCase<GetPetsUseCaseInput, Get
 
     async run(input: GetPetsUseCaseInput): Promise<GetPetsUseCaseOutput> {
         
-        // const pet = await this.petRepository.getPets(input)   
+        const queryResponse = await this.petRepository.getByFilter(input)   
 
-        // const petPhoto = !!pet.photo ? (await this.fileService.readFile(pet.photo)).toString('base64') : null;
+        const petResponseList: PetResponse[] = [];
+
+        for (const pet of queryResponse.items) {
+          if (pet.photo) {
+            const photoInBase64 = await this.fileService.readFile(pet.photo);
+            pet.photo = photoInBase64.toString('base64');
+          }
+
+          petResponseList.push(PetResponse.fromPet(pet));
+        }
+
+        const totalPages = Math.ceil(queryResponse.total / input.itemsPerPage);
 
         return new GetPetsUseCaseOutput({
-        //   id: pet._id,
-        //   name: pet.name,
-        //   type: pet.type,
-        //   size: pet.size,
-        //   gender: pet.gender,
-        //   bio: pet.bio,
-        //   photo: petPhoto,
-        //   createdAt: pet.createdAt,
-        //   updatedAt: pet.updatedAt,    
-         })
+          currentPage: input.page,
+          totalPages,
+          items: petResponseList
+        })
     }
 
 }
