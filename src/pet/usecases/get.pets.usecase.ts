@@ -27,8 +27,7 @@ export default class GetPetsUseCase implements IUseCase<GetPetsUseCaseInput, Get
 
         for (const pet of queryResponse.items) {
           if (pet.photo) {
-            const photoInBase64 = await this.fileService.readFile(pet.photo);
-            pet.photo = photoInBase64.toString('base64');
+            pet.photo = await this.fileService.readFileInBase64(pet.photo);
           }
 
           petResponseList.push(PetResponse.fromPet(pet));
